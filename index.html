@@ -133,25 +133,14 @@ color:#888;
 <a href="#" class="btn">Khám phá ngay</a>
 </section>
 
-<section class="products">
+<section class="products" id="services-container">
+    </section>
 
-<div class="card">
-<h3>📱 Mua Zalo</h3>
-<p>Zalo cổ - Zalo mới - Zalo theo yêu cầu</p>
-<button class="buy">Xem dịch vụ</button>
-</div>
 
-<div class="card">
-<h3>🔥 Dame FB</h3>
-<p>Các dịch vụ hỗ trợ Facebook</p>
-<button class="buy">Xem dịch vụ</button>
-</div>
 
-<div class="card">
-<h3>🎵 Mua Nick TikTok</h3>
-<p>Tài khoản TikTok nhiều mức giá</p>
-<button class="buy">Xem dịch vụ</button>
-</div>
+
+
+
 
 </section>
 
@@ -159,5 +148,25 @@ color:#888;
 © 2026 HunterXBaking
 </footer>
 
+<script>
+    async function loadServices() {
+        try {
+            const response = await fetch('data.json');
+            const data = await response.json();
+            const container = document.getElementById('services-container');
+            
+            container.innerHTML = data.map(item => `
+                <div class="card">
+                    <h3>${item.title || ''}</h3>
+                    <p>${item.description || ''}</p>
+                    <button class="buy">Xem dịch vụ</button>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error("Lỗi tải dữ liệu:", error);
+        }
+    }
+    loadServices();
+</script>
 </body>
 </html>
