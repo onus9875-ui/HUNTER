@@ -167,5 +167,28 @@ color:#888;
 © 2026 HunterXBaking
 </footer>
 
-</body>
+</body> 
+<div id="list"></div>
 </html>
+<script type="module">async function loadProducts() {
+  const { data, error } = await supabase
+    .from("products")
+    .select("*");
+
+  console.log(data); // kiểm tra có dữ liệu không
+
+  document.getElementById("list").innerHTML =
+    data.map(p => `
+      <div style="border:1px solid #000;padding:10px;margin:10px">
+        <h3>${p.name}</h3>
+        <p>${p.description}</p>
+        <b>${p.price} VND</b>
+      </div>
+    `).join("");
+}
+loadProducts();
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+const supabase = createClient(
+  "https://ihfgfalvhtivipvvzvbp.supabase.co/rest/v1/"
+  "sb_publishable_wRV6-Ldmnurgkwfhi43xjw_5MY-q-es"
