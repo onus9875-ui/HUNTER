@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Apple Shop Pro</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI";
+  background: #0b0b0f;
+  color: white;
+}
+
+/* TOP BAR */
+.top {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 20px;
+  background: rgba(255,255,255,0.05);
+}
+
+/* LOGIN BOX */
+.login {
+  max-width: 300px;
+  margin: 80px auto;
+  background: rgba(255,255,255,0.06);
+  padding: 20px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+input {
+  width: 90%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 10px;
+  border: none;
+}
+
+/* BUTTON */
+button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: #0071e3;
+  color: white;
+  cursor: pointer;
+}
+
+/* GRID */
+.container {
+  display: none;
+  grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+/* CARD */
+.card {
+  background: rgba(255,255,255,0.06);
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.price {
+  color: #00ffcc;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="login" id="loginBox">
+  <h2>Đăng nhập</h2>
+  <input id="user" placeholder="Tên user">
+  <button onclick="login()">Vào shop</button>
+</div>
+
+<!-- TOP -->
+<div class="top" id="topBar" style="display:none;">
+  <div>👤 <span id="username"></span></div>
+  <div>💰 <span id="balance">0</span>đ</div>
+</div>
+
+<!-- SHOP -->
+<div class="container" id="shop">
+
+  <div class="card">
+    <h3>🔥 Facebook</h3>
+    <p class="price">50.000đ</p>
+    <button onclick="buy('Facebook',50000)">Mua</button>
+  </div>
+
+  <div class="card">
+    <h3>💬 Zalo Tháng/Năm</h3>
+    <p class="price">100.000đ</p>
+    <button onclick="buy('Zalo',100000)">Mua</button>
+  </div>
+
+  <div class="card">
+    <h3>🎵 TikTok 500-1K FL</h3>
+    <p class="price">150.000đ</p>
+    <button onclick="buy('TikTok',150000)">Mua</button>
+  </div>
+
+  <div class="card">
+    <h3>💰 Nạp tiền</h3>
+    <input id="money" placeholder="Nhập số tiền">
+    <button onclick="deposit()">Nạp</button>
+  </div>
+
+</div>
+
+<script>
+let user = "";
+let balance = 0;
+let orders = [];
+
+function login() {
+  user = document.getElementById("user").value;
+  if(!user) return alert("Nhập tên!");
+
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("shop").style.display = "grid";
+  document.getElementById("topBar").style.display = "flex";
+
+  document.getElementById("username").innerText = user;
+
+  load();
+}
+
+function deposit() {
+  let m = parseInt(document.getElementById("money").value);
+  if(!m || m <= 0) return alert("Sai số tiền");
+
+  balance += m;
+  save();
+}
+
+function buy(name, price) {
+  if(balance < price) return alert("Không đủ tiền!");
+
+  balance -= price;
+
+  orders.push({
+    name: name,
+    price: price
+  });
+
+  save();
+  alert("Mua thành công: " + name);
+}
+
+function save() {
+  localStorage.setItem("balance", balance);
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+  document.getElementById("balance").innerText = balance;
+}
+
+function load() {
+  balance = parseInt(localStorage.getItem("balance")) || 0;
+  orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+  document.getElementById("balance").innerText = balance;
+}
+</script>
+
+</body>
+</html>
