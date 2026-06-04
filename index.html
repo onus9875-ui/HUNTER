@@ -119,38 +119,49 @@ color:#888;
 
 <header>
 <div class="logo">HunterXBaking</div>
-
-<nav>
-<a href="#">Mua Zalo</a>
-<a href="#">Dame FB</a>
-<a href="#">Mua Nick TikTok</a>
-</nav>
+<div id="userBox">Chưa đăng nhập</div>
 </header>
 
 <section class="hero">
 <h1>HunterXBaking Store</h1>
 <p>Dịch vụ trực tuyến nhanh chóng và tiện lợi</p>
-<a href="#" class="btn">Khám phá ngay</a>
+
+<!-- LOGIN -->
+<div id="loginBox">
+  <input id="user" placeholder="Nhập username" style="padding:10px;border-radius:10px;">
+  <button onclick="login()" class="btn">Đăng nhập</button>
+</div>
+
+<div id="wallet" style="margin-top:15px;font-weight:bold;"></div>
 </section>
 
 <section class="products">
 
 <div class="card">
 <h3>📱 Mua Zalo</h3>
-<p>Zalo cổ - Zalo mới - Zalo theo yêu cầu</p>
-<button class="buy">Xem dịch vụ</button>
+<p>Giá: 100.000đ</p>
+<button class="buy" onclick="buy('Zalo',100000)">Mua ngay</button>
 </div>
 
 <div class="card">
 <h3>🔥 Dame FB</h3>
-<p>Các dịch vụ hỗ trợ Facebook</p>
-<button class="buy">Xem dịch vụ</button>
+<p>Giá: 50.000đ</p>
+<button class="buy" onclick="buy('Facebook',50000)">Mua ngay</button>
 </div>
 
 <div class="card">
-<h3>🎵 Mua Nick TikTok</h3>
-<p>Tài khoản TikTok nhiều mức giá</p>
-<button class="buy">Xem dịch vụ</button>
+<h3>🎵 TikTok Nick</h3>
+<p>Giá: 150.000đ</p>
+<button class="buy" onclick="buy('TikTok',150000)">Mua ngay</button>
+</div>
+
+<!-- NẠP TIỀN -->
+<div class="card">
+<h3>💰 Nạp tiền</h3>
+<input id="money" placeholder="Nhập số tiền">
+<button class="buy" onclick="deposit()">Nạp tiền</button>
+
+<p id="qrText"></p>
 </div>
 
 </section>
@@ -159,5 +170,62 @@ color:#888;
 © 2026 HunterXBaking
 </footer>
 
+<script>
+let user = "";
+let balance = 0;
+
+// LOGIN
+function login(){
+  user = document.getElementById("user").value;
+  if(!user) return alert("Nhập username");
+
+  document.getElementById("userBox").innerText = "👤 " + user;
+
+  balance = parseInt(localStorage.getItem(user+"_balance")) || 0;
+
+  updateWallet();
+}
+
+// UPDATE UI
+function updateWallet(){
+  document.getElementById("wallet").innerText =
+  "💰 Số dư: " + balance + "đ";
+}
+
+// MUA
+function buy(name, price){
+  if(balance < price){
+    alert("Không đủ tiền!");
+    return;
+  }
+
+  balance -= price;
+  save();
+
+  alert("Đã mua: " + name);
+}
+
+// NẠP TIỀN (QR DEMO)
+function deposit(){
+  let money = parseInt(document.getElementById("money").value);
+  if(!money || money <= 0) return alert("Sai số tiền");
+
+  document.getElementById("qrText").innerText =
+  "Chuyển khoản nội dung: " + user;
+
+  // giả lập cộng tiền
+  balance += money;
+  save();
+
+  alert("Nạp thành công (demo)");
+}
+
+// SAVE
+function save(){
+  localStorage.setItem(user+"_balance", balance);
+  updateWallet();
+}
+</script>
+
 </body>
-</html>
+
