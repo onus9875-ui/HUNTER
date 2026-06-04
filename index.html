@@ -1,172 +1,58 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HunterXBaking</title>
-
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-}
-
-body{
-background:#f5f5f7;
-color:#1d1d1f;
-}
-
-header{
-background:#fff;
-padding:20px 8%;
-display:flex;
-justify-content:space-between;
-align-items:center;
-box-shadow:0 2px 10px rgba(0,0,0,.05);
-position:sticky;
-top:0;
-z-index:100;
-}
-
-.logo{
-font-size:28px;
-font-weight:700;
-}
-
-nav a{
-text-decoration:none;
-color:#1d1d1f;
-margin-left:20px;
-font-weight:500;
-}
-
-.hero{
-background:#fff;
-padding:100px 20px;
-text-align:center;
-}
-
-.hero h1{
-font-size:50px;
-margin-bottom:15px;
-}
-
-.hero p{
-font-size:18px;
-color:#666;
-}
-
-.btn{
-display:inline-block;
-margin-top:20px;
-padding:14px 30px;
-background:#000;
-color:#fff;
-text-decoration:none;
-border-radius:30px;
-}
-
-.products{
-padding:60px 8%;
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:25px;
-}
-
-.card{
-background:#fff;
-border-radius:20px;
-padding:25px;
-box-shadow:0 5px 20px rgba(0,0,0,.08);
-transition:.3s;
-}
-
-.card:hover{
-transform:translateY(-5px);
-}
-
-.card h3{
-font-size:24px;
-margin-bottom:10px;
-}
-
-.card p{
-color:#666;
-margin-bottom:20px;
-}
-
-.buy{
-width:100%;
-padding:12px;
-background:#000;
-color:#fff;
-border:none;
-border-radius:10px;
-cursor:pointer;
-}
-
-footer{
-text-align:center;
-padding:30px;
-color:#888;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Dịch Vụ Của Tôi</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* CSS đơn giản cho thẻ card */
+        .products { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; }
+        .card { border: 1px solid #ddd; padding: 15px; border-radius: 8px; width: 250px; }
+        .buy { background-color: #007bff; color: white; border: none; padding: 10px; cursor: pointer; }
+    </style>
 </head>
-
 <body>
 
-<header>
-<div class="logo">HunterXBaking</div>
-
-<nav>
-<a href="#">Mua Zalo</a>
-<a href="#">Dame FB</a>
-<a href="#">Mua Nick TikTok</a>
-</nav>
-</header>
-
-<section class="hero">
-<h1>HunterXBaking Store</h1>
-<p>Dịch vụ trực tuyến nhanh chóng và tiện lợi</p>
-<a href="#" class="btn">Khám phá ngay</a>
-</section>
-
-<section class="products" id="services-container">
+    <h1>Danh sách dịch vụ</h1>
+    <section class="products" id="services-container">
+        Đang tải dữ liệu...
     </section>
 
+    <script>
+        // 1. Thay URL và KEY từ phần Settings > API của Supabase
+        const SUPABASE_URL = 'https://YOUR_PROJECT_URL.supabase.co';
+        const SUPABASE_KEY = 'YOUR_ANON_KEY';
+        
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-
-
-
-
-
-</section>
-
-<footer>
-© 2026 HunterXBaking
-</footer>
-
-<script>
-    async function loadServices() {
-        try {
-            const response = await fetch('data.json');
-            const data = await response.json();
+        // 2. Hàm lấy dữ liệu và hiển thị
+        async function loadServices() {
+            const { data, error } = await supabase.from('products').select('*');
+            
             const container = document.getElementById('services-container');
             
+            if (error) {
+                container.innerHTML = "Có lỗi xảy ra: " + error.message;
+                return;
+            }
+
+            if (data.length === 0) {
+                container.innerHTML = "Chưa có dịch vụ nào.";
+                return;
+            }
+
             container.innerHTML = data.map(item => `
                 <div class="card">
-                    <h3>${item.title || ''}</h3>
-                    <p>${item.description || ''}</p>
+                    <h3>${item.title}</h3>
+                    <p>${item.description}</p>
                     <button class="buy">Xem dịch vụ</button>
                 </div>
             `).join('');
-        } catch (error) {
-            console.error("Lỗi tải dữ liệu:", error);
         }
-    }
-    loadServices();
-</script>
+
+        // 3. Chạy hàm khi trang web tải xong
+        loadServices();
+    </script>
 </body>
 </html>
